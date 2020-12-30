@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Advertiser</title>
+</head>
+<body>
+    <h1>TikTok Advertisers</h1>
+    <ul class="list-group">
+        <% data.forEach(function(ad) {%>
+        <li>
+            <a href='/reports?advertiser_id=<%=ad.advertiser_id%>&start_date=2020-12-01&end_date=2020-12-27&page_size=1000&fields=["stat_cost","show_cnt","click_cost","ctr"]' class="list-group-item text-dark"><%=ad.advertiser_name%></a>
+        </li>
+        <%});%>
+    </ul>
+
+    <p>Access Token: <%=accessToken%></p>
+</body>
+</html>
