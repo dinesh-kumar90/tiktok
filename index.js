@@ -24,7 +24,7 @@ app.use(express.static('./public'));
 
 const appId = '6911718171963555842';
 const appSecret = '2f1a5cc64d7fd1cfc9b12ee6c16327c07827636f';
-const appCallBackUrl = 'https://aqueous-crag-89081.herokuapp.com/auth/callback';
+const appCallBackUrl = 'https://triplewhale-tiktok.herokuapp.com/auth/callback';
 
 const authUrl = `https://ads.tiktok.com/marketing_api/auth?app_id=${appId}&state=your_custom_params&redirect_uri=${appCallBackUrl}&rid=b6sdzry4jgw`;
 
@@ -61,6 +61,35 @@ app.get('/reports', (req, res) => {
         var options = {
             'method': 'GET',
             'url': `https://ads.tiktok.com/open_api/v1.1/reports/advertiser/get/?advertiser_id=${advertiserId}&start_date=${startDate}&end_date=${endDate}&page_size=${pageSize}&fields=${fields}`,
+            'headers': {
+              'Access-Token': req.session.token,
+              'Cookie': 'part=stable'
+            }
+          };
+          request(options, function (error, response) {
+            if (error) throw new Error(error);
+            console.log(response.body);
+            res.json(JSONbig.parse(response.body));
+          });
+          
+    } else {
+        res.redirect(authUrl);
+    }
+});
+
+app.get('/new-reports', (req, res) => {
+    if (req.session.token) {
+        const advertiserId = req.query.advertiser_id;
+        const startDate = req.query.start_date;
+        const endDate = req.query.end_date;
+        const pageSize = req.query.page_size;
+        const report_type = req.query.report_type;
+        const data_level = req.query.data_level;
+        const dimensions = req.query.dimensions;
+        const metrics = req.query.metrics;
+        var options = {
+            'method': 'GET',
+            'url': `https://ads.tiktok.com/open_api/v1.1/reports/integrated/get/?advertiser_id=${advertiserId}&start_date=${startDate}&end_date=${endDate}&report_type=${report_type}&data_level=${data_level}&dimensions=${dimensions}&metrics=${metrics}`,
             'headers': {
               'Access-Token': req.session.token,
               'Cookie': 'part=stable'
